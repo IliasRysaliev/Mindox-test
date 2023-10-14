@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 4 # Четыре реплики, так как нагрузочный тест показал, что 4 пода справляются с пиковой нагрузкой
+  strategy:
+    type: RollingUpdate # Используем RollingUpdate для обновления Deployment
+    rollingUpdate:
+      maxUnavailable: 0 # Не разрешаем недоступность подов во время обновления
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+        - name: web-app
+          image: your-web-app-image:latest
+          resources:
+            requests:
+              memory: "256Mi" # Устанавливаем запросы ресурсов в 256Mi памяти для лучшей инициализации
+              cpu: "2" # Устанавливаем запросы ресурсов в 2 CPU для лучшей инициализации
+            limits:
+              memory: "128Mi" # Устанавливаем ограничение памяти в 128Mi
+              cpu: "0.1" # Устанавливаем ограничение CPU в 0.1
